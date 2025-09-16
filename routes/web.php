@@ -1,6 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VentaController;
+
+// POS: solo crear venta
+Route::get('/pos', [VentaController::class, 'create'])->name('ventas.create');
+Route::post('/pos', [VentaController::class, 'store'])->name('ventas.store');
+
+// ADMIN: solo ver ventas
+Route::prefix('admin')->group(function () {
+    Route::get('/ventas', [VentaController::class, 'index'])->name('ventas.index');
+    Route::get('/ventas/{id}', [VentaController::class, 'show'])->name('ventas.show');
+});
 
 /*
 |--------------------------------------------------------------------------
