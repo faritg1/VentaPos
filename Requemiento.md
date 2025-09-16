@@ -19,7 +19,7 @@
 ### Gestión de Clientes
 
 - Visualización de clientes con datos básicos necesarios para la generación de facturas.
-- No se puede eliminar un cliente que haya realizado al menos una venta.
+- No se puede eliminar un cliente que haya realizado al menos una compra.
 - El usuario administrador puede eliminar, editar y crear clientes.
 - Desde el POS solo se permite crear clientes (no editar ni eliminar).
 
