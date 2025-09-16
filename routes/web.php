@@ -1,6 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VentaController;
+use App\Http\Controllers\ReporteController;
+
+Route::prefix('admin')->group(function () {
+    Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+    Route::get('/reportes/data', [ReporteController::class, 'data'])->name('reportes.data'); // API JSON para gráficos
+});
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/ventas', [VentaController::class, 'index'])->name('ventas.index');
+    Route::get('/ventas/{id}', [VentaController::class, 'show'])->name('ventas.show');
+});
+
 
 /*
 |--------------------------------------------------------------------------
