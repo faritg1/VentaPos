@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('adminlte::page')  
 
 @section('content')
 <h1>📊 Reportes de Ventas</h1>
