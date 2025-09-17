@@ -9,18 +9,24 @@ class Producto extends Model
 {
     use HasFactory;
 
-    // 👇 Aquí obligamos a Laravel a usar la tabla "producto"
+    // 👇 Laravel automáticamente buscará la tabla "productos"
+    // pero como tu tabla se llama "producto", lo forzamos aquí:
     protected $table = 'producto';
 
+    // Campos que se pueden llenar masivamente
     protected $fillable = [
-        'codigo',
         'nombre',
         'descripcion',
         'cantidad',
         'precio',
     ];
 
-    protected $primaryKey = 'codigo'; // si tu llave primaria no es 'id'
+    // 👇 Si tu tabla usa "id" como clave primaria, no hace falta,
+    // pero lo pongo explícito para mayor claridad:
+    protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
+
+
+        public $timestamps = false;
 }

@@ -40,9 +40,43 @@
     {{-- Contenido dinámico --}}
     <main class="container">
         @yield('content')
-    </div>
+    </main>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {{-- Mensajes flash con SweetAlert2 --}}
+@section('js')
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('success') }}",
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            })
+        </script>
+    @endif
+
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ session('error') }}",
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            })
+        </script>
+    @endif
+@endsection
+
+
 </body>
 </html>
+
