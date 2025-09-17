@@ -67,3 +67,4 @@ class ClienteController extends Controller
         return redirect()->route('admin.clientes.index')->with('success', 'Cliente eliminado correctamente.');
     }
 }
+

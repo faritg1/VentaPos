@@ -34,15 +34,12 @@
         </div>
 
         <!-- Clientes -->
-        <div class="col-md-3">
-            <a href="#" class="card card-dashboard text-dark bg-warning h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Clientes</h4>
-                    <p class="mb-0">Gestión de clientes</p>
-                </div>
-            </a>
-        </div>
+<li class="nav-item">
+    <a href="{{ route('admin.clientes.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-users"></i>
+        <p>Clientes</p>
+    </a>
+</li>
 
         <!-- Productos -->
         <div class="col-md-3">

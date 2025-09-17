@@ -1,68 +1,49 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', 'Clientes')
+
+@section('content_header')
+    <h1>Gestión de Clientes</h1>
+@stop
 
 @section('content')
-<div class="container mt-4">
-
-    {{-- Mensajes de éxito --}}
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Listado de Clientes</h3>
+            <a href="{{ route('admin.clientes.create') }}" class="btn btn-primary btn-sm float-right">Nuevo Cliente</a>
         </div>
-    @endif
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="fw-bold">👥 Gestión de Clientes</h2>
-        <a href="{{ route('admin.clientes.create') }}" class="btn btn-primary">
-            ➕ Nuevo Cliente
-        </a>
-    </div>
-
-    <div class="card shadow">
         <div class="card-body">
-            <table class="table table-striped table-hover align-middle">
-                <thead class="table-dark">
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tipo Documento</th>
-                        <th>Número</th>
                         <th>Nombre</th>
-                        <th>Ciudad</th>
-                        <th>Teléfono</th>
-                        <th class="text-center">Acciones</th>
+                        <th>Email</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($clientes as $cliente)
+                    @forelse ($clientes as $cliente)
                         <tr>
                             <td>{{ $cliente->id }}</td>
-                            <td>{{ $cliente->tipo_documento ?? '-' }}</td>
-                            <td>{{ $cliente->numero_documento ?? '-' }}</td>
                             <td>{{ $cliente->nombre }}</td>
-                            <td>{{ $cliente->ciudad ?? '-' }}</td>
-                            <td>{{ $cliente->telefono ?? '-' }}</td>
-                            <td class="text-center">
-                                <a href="{{ route('admin.clientes.edit', $cliente->id) }}" class="btn btn-sm btn-warning">
-                                    ✏️ Editar
-                                </a>
-                                <form action="{{ route('admin.clientes.destroy', $cliente->id) }}" 
-                                      method="POST" 
-                                      class="d-inline"
-                                      onsubmit="return confirm('¿Seguro que deseas eliminar este cliente?');">
+                            <td>{{ $cliente->email }}</td>
+                            <td>
+                                <a href="{{ route('admin.clientes.edit', $cliente) }}" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="{{ route('admin.clientes.destroy', $cliente) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">🗑 Eliminar</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-muted">No hay clientes registrados</td>
+                            <td colspan="4">No hay clientes registrados.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
-
-</div>
-@endsection
+@stop
