@@ -20,13 +20,14 @@ class ReporteController extends Controller
     {
         // === Ventas por día (últimos 7 días) ===
         $ventasPorDia = Venta::select(
-                DB::raw('DATE(fecha) as fecha'),
-                DB::raw('SUM(total) as total')
-            )
-            ->groupBy('fecha')
-            ->orderBy('fecha', 'desc')
-            ->limit(7)
-            ->get();
+    DB::raw('DATE(fecha) as fecha'),
+    DB::raw('SUM(total) as total')
+)
+->groupBy('fecha')
+->orderBy('fecha', 'desc')
+->limit(7)
+->get();
+
 
         // === Ventas por mes (últimos 6 meses) ===
         $ventasPorMes = Venta::select(
