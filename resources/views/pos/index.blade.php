@@ -43,25 +43,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @forelse($productos as $producto)
+                    @forelse($producto as $pro)
                         <tr>
-                            <td class="text-center">{{ $producto->codigo }}</td>
-                            <td>{{ $producto->nombre }}</td>
-                            <td>{{ $producto->descripcion }}</td>
-                            <td class="text-center">{{ $producto->cantidad }}</td>
-                            <td class="text-end">${{ number_format($producto->precio, 2) }}</td>
+                            <td class="text-center">{{ $pro->codigo }}</td>
+                            <td>{{ $pro->nombre }}</td>
+                            <td>{{ $pro->descripcion }}</td>
+                            <td class="text-center">{{ $pro->cantidad }}</td>
+                            <td class="text-end">${{ number_format($pro->precio, 2) }}</td>
                             <td class="text-center">
-                                <a href="{{ route('producto.edit', $producto->codigo) }}" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil-square"></i> Editar
-                                </a>
-
-                                <form action="{{ route('producto.destroy', $producto->codigo) }}" method="POST" class="d-inline form-eliminar">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Eliminar
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     @empty
