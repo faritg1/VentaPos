@@ -143,16 +143,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             // === Productos Más Vendidos ===
-            new Chart(document.getElementById('chartProducto'), {
-                type: 'pie',
-                data: {
-                    labels: data.porProducto.map(p => p.producto?.nombre ?? 'Desconocido'),
-                    datasets: [{
-                        data: data.porProducto.map(p => p.cantidad),
-                        backgroundColor: ['#FF5733','#FFC300','#28A745','#007BFF','#6F42C1']
-                    }]
-                }
-            });
+new Chart(document.getElementById('chartProducto'), {
+    type: 'pie',
+    data: {
+        labels: data.porProducto.map(p => p.label),  // 👈 antes era producto.nombre
+        datasets: [{
+            data: data.porProducto.map(p => p.value), // 👈 antes era cantidad
+            backgroundColor: ['#FF5733','#FFC300','#28A745','#007BFF','#6F42C1']
+        }]
+    }
+});
+
 
             // === Tipo de Clientes ===
             new Chart(document.getElementById('chartClientes'), {

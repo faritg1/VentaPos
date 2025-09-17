@@ -23,8 +23,7 @@ class ReporteController extends Controller
     public function data()
     {
         // === Ventas por día (últimos 7 días) ===
-        $ventasPorDia = DB::table('venta')
-            ->select(
+        $ventasPorDia = Venta::select(
                 DB::raw('DATE(fecha) as fecha'),
                 DB::raw('SUM(total) as total')
             )
@@ -34,8 +33,7 @@ class ReporteController extends Controller
             ->get();
 
         // === Ventas por mes (últimos 6 meses) ===
-        $ventasPorMes = DB::table('venta')
-            ->select(
+        $ventasPorMes = Venta::select(
                 DB::raw('DATE_FORMAT(fecha, "%Y-%m") as mes'),
                 DB::raw('SUM(total) as total')
             )
@@ -48,19 +46,21 @@ class ReporteController extends Controller
         $ventasPorProducto = DB::table('detalle_venta')
             ->join('producto', 'detalle_venta.producto_id', '=', 'producto.id')
             ->select(
-                'producto.nombre',
-                DB::raw('SUM(detalle_venta.cantidad) as cantidad')
+                'producto.nombre as label',
+                DB::raw('SUM(detalle_venta.cantidad) as value')
             )
             ->groupBy('producto.id', 'producto.nombre')
-            ->orderByDesc('cantidad')
+            ->orderByDesc('value')
             ->limit(5)
             ->get();
 
         // === Totales para las cards ===
-        $ventasTotales     = DB::table('venta')->sum('total');
+        $ventasTotales     = Venta::sum('total');
         $clientes          = DB::table('cliente')->count();
-        $productosVendidos = DB::table('detalle_venta')->sum('cantidad');
-        $facturas          = DB::table('venta')->where('tipo', 'factura')->count();
+        $productosVendidos = DetalleVenta::sum('cantidad');
+
+        // ⚠️ Ajuste: ya no existe "requiere_factura" en la tabla venta
+        $facturas          = Venta::where('tipo', 'factura')->count();
 
         // === Tipo de clientes (mostrador vs registrados) ===
         $mostrador   = DB::table('cliente')->where('es_mostrador', true)->count();
