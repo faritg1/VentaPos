@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\PosController;
+use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AdminController;
 
 Route::prefix('admin')->group(function () {
@@ -25,18 +27,9 @@ Route::prefix('admin')->group(function () {
     // Route::resource('productos', ProductoController::class);
 });
 
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::resource('producto', ProductoController::class);
+Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
 
 Route::get('/', function () {
     return view('welcome');
