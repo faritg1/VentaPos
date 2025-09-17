@@ -4,23 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Venta extends Model
-{
-    protected $fillable = ['tipo','cliente_id','metodo_pago_id','total','numero_factura'];
+// App\Models\Venta.php
+class Venta extends Model {
+    protected $table = 'venta';
+    protected $fillable = ['tipo','cliente_id','metodo_pago_id','total','numero_factura','fecha'];
 
-    public function cliente()
-    {
-        return $this->belongsTo(Cliente::class);
+    public function detalles() {
+        return $this->hasMany(DetalleVenta::class, 'venta_id');
     }
-
-    public function metodoPago()
-    {
-        return $this->belongsTo(MetodoPago::class);
-    }
-
-    public function detalles()
-    {
-        return $this->hasMany(DetalleVenta::class);
+    public function cliente() {
+        return $this->belongsTo(Cliente::class, 'cliente_id');
     }
 }
+
 
