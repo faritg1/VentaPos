@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DetalleVenta extends Model
-{
-    protected $fillable = ['venta_id','producto_id','cantidad','precio_unitario','subtotal'];
+// App\Models\DetalleVenta.php
+class DetalleVenta extends Model {
+    protected $table = 'detalle_venta';
 
-    public function producto()
-    {
-        return $this->belongsTo(Producto::class);
+    public function producto() {
+        return $this->belongsTo(Producto::class, 'producto_id');
     }
 }
+

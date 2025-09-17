@@ -1,71 +1,172 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', '📊 Reportes')
+
+@section('content_header')
+    <h1>📊 Reportes y Estadísticas</h1>
+@stop
 
 @section('content')
-<h1>📊 Reportes de Ventas</h1>
+<div class="container-fluid">
 
-<div style="width: 80%; margin: auto;">
-    <h3>Ventas por Día (últimos 7 días)</h3>
-    <canvas id="chartDia"></canvas>
+    <!-- Botón volver -->
+    <a href="{{ url('/admin') }}" class="btn btn-secondary mb-3">
+        ⬅️ Volver al Panel de Administración
+    </a>
+
+    <!-- Tarjetas resumen -->
+    <div class="row">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3 id="ventasTotales">$0</h3>
+                    <p>Ventas Totales</p>
+                </div>
+                <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3 id="clientes">0</h3>
+                    <p>Clientes Registrados</p>
+                </div>
+                <div class="icon"><i class="fas fa-users"></i></div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3 id="productosVendidos">0</h3>
+                    <p>Productos Vendidos</p>
+                </div>
+                <div class="icon"><i class="fas fa-box"></i></div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3 id="facturas">0</h3>
+                    <p>Facturas Emitidas</p>
+                </div>
+                <div class="icon"><i class="fas fa-file-invoice"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-primary">
+                <div class="card-header">📅 Ventas por Día</div>
+                <div class="card-body">
+                    <canvas id="chartDia"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card card-success">
+                <div class="card-header">📆 Ventas por Mes</div>
+                <div class="card-body">
+                    <canvas id="chartMes"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card card-warning">
+                <div class="card-header">🥟 Productos Más Vendidos</div>
+                <div class="card-body">
+                    <canvas id="chartProducto"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card card-info">
+                <div class="card-header">👥 Tipo de Clientes</div>
+                <div class="card-body">
+                    <canvas id="chartClientes"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+@stop
 
-<div style="width: 80%; margin: auto; margin-top: 40px;">
-    <h3>Ventas por Mes (últimos 6 meses)</h3>
-    <canvas id="chartMes"></canvas>
-</div>
-
-<div style="width: 80%; margin: auto; margin-top: 40px;">
-    <h3>Productos Más Vendidos</h3>
-    <canvas id="chartProducto"></canvas>
-</div>
-
+@section('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", () => {
     fetch("{{ route('reportes.data') }}")
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
+            // === Totales ===
+            document.getElementById('ventasTotales').innerText = "$" + parseFloat(data.ventasTotales).toFixed(2);
+            document.getElementById('clientes').innerText = data.clientes;
+            document.getElementById('productosVendidos').innerText = data.productosVendidos;
+            document.getElementById('facturas').innerText = data.facturas;
+
             // === Ventas por Día ===
-            const ctxDia = document.getElementById('chartDia').getContext('2d');
-            new Chart(ctxDia, {
+            new Chart(document.getElementById('chartDia'), {
                 type: 'line',
                 data: {
-                    labels: data.porDia.map(d => d.fecha),
+                    labels: data.porDia.map(v => v.fecha),
                     datasets: [{
-                        label: 'Ventas ($)',
-                        data: data.porDia.map(d => d.total),
-                        borderColor: 'blue',
-                        fill: false
+                        label: 'Ventas por Día',
+                        data: data.porDia.map(v => v.total),
+                        borderColor: '#007bff',
+                        fill: false,
+                        tension: 0.3
                     }]
                 }
             });
 
             // === Ventas por Mes ===
-            const ctxMes = document.getElementById('chartMes').getContext('2d');
-            new Chart(ctxMes, {
+            new Chart(document.getElementById('chartMes'), {
                 type: 'bar',
                 data: {
-                    labels: data.porMes.map(m => m.mes),
+                    labels: data.porMes.map(v => v.mes),
                     datasets: [{
-                        label: 'Ventas ($)',
-                        data: data.porMes.map(m => m.total),
-                        backgroundColor: 'green'
+                        label: 'Ventas por Mes',
+                        data: data.porMes.map(v => v.total),
+                        backgroundColor: '#28a745'
                     }]
                 }
             });
 
             // === Productos Más Vendidos ===
-            const ctxProd = document.getElementById('chartProducto').getContext('2d');
-            new Chart(ctxProd, {
+            new Chart(document.getElementById('chartProducto'), {
                 type: 'pie',
                 data: {
-                    labels: data.porProducto.map(p => p.producto.nombre),
+                    labels: data.porProducto.map(p => p.producto?.nombre ?? 'Desconocido'),
                     datasets: [{
                         data: data.porProducto.map(p => p.cantidad),
-                        backgroundColor: ['red','orange','yellow','green','blue']
+                        backgroundColor: ['#FF5733','#FFC300','#28A745','#007BFF','#6F42C1']
                     }]
                 }
             });
-        });
+
+            // === Tipo de Clientes ===
+            new Chart(document.getElementById('chartClientes'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Mostrador', 'Registrados'],
+                    datasets: [{
+                        data: [data.tipoClientes.mostrador, data.tipoClientes.registrados],
+                        backgroundColor: ['#17A2B8','#E83E8C']
+                    }]
+                }
+            });
+        })
+        .catch(err => console.error("Error cargando datos:", err));
 });
 </script>
-@endsection
+@stop
