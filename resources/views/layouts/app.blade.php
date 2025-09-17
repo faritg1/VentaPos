@@ -17,8 +17,7 @@
             <a class="navbar-brand fw-bold" href="{{ url('/') }}">🍴 Empanadas & Papas</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('pos.index') }}">POS</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.productos.index') }}">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('admin.producto.index') }}">Productos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('admin.clientes.index') }}">Clientes</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('admin.ventas.index') }}">Ventas</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('admin.informes.index') }}">Informes</a></li>
