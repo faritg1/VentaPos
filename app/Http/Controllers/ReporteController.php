@@ -23,7 +23,8 @@ class ReporteController extends Controller
     public function data()
     {
         // === Ventas por día (últimos 7 días) ===
-        $ventasPorDia = Venta::select(
+        $ventasPorDia = DB::table('venta')
+            ->select(
                 DB::raw('DATE(fecha) as fecha'),
                 DB::raw('SUM(total) as total')
             )
@@ -33,7 +34,8 @@ class ReporteController extends Controller
             ->get();
 
         // === Ventas por mes (últimos 6 meses) ===
-        $ventasPorMes = Venta::select(
+        $ventasPorMes = DB::table('venta')
+            ->select(
                 DB::raw('DATE_FORMAT(fecha, "%Y-%m") as mes'),
                 DB::raw('SUM(total) as total')
             )
@@ -43,25 +45,26 @@ class ReporteController extends Controller
             ->get();
 
         // === Productos más vendidos (Top 5) ===
-        $ventasPorProducto = DetalleVenta::select(
-                'producto_id',
-                DB::raw('SUM(cantidad) as cantidad')
+        $ventasPorProducto = DB::table('detalle_venta')
+            ->join('producto', 'detalle_venta.producto_id', '=', 'producto.id')
+            ->select(
+                'producto.nombre',
+                DB::raw('SUM(detalle_venta.cantidad) as cantidad')
             )
-            ->groupBy('producto_id')
-            ->with('producto:id,nombre') // traer solo id y nombre del producto
+            ->groupBy('producto.id', 'producto.nombre')
             ->orderByDesc('cantidad')
             ->limit(5)
             ->get();
 
         // === Totales para las cards ===
-        $ventasTotales     = Venta::sum('total');
-        $clientes          = DB::table('clientes')->count();
-        $productosVendidos = DetalleVenta::sum('cantidad');
-        $facturas          = Venta::where('requiere_factura', true)->count();
+        $ventasTotales     = DB::table('venta')->sum('total');
+        $clientes          = DB::table('cliente')->count();
+        $productosVendidos = DB::table('detalle_venta')->sum('cantidad');
+        $facturas          = DB::table('venta')->where('tipo', 'factura')->count();
 
         // === Tipo de clientes (mostrador vs registrados) ===
-        $mostrador   = DB::table('clientes')->where('es_mostrador', true)->count();
-        $registrados = DB::table('clientes')->where('es_mostrador', false)->count();
+        $mostrador   = DB::table('cliente')->where('es_mostrador', true)->count();
+        $registrados = DB::table('cliente')->where('es_mostrador', false)->count();
 
         // === Respuesta JSON ===
         return response()->json([
