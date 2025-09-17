@@ -1,26 +1,65 @@
 @extends('layouts.app')
 
-@section('title', 'Panel de Administración')
+@section('title', '⚙️ Panel de Administración')
 
 @section('content')
-    <h1>⚙️ Panel de Administración</h1>
-    <p>Selecciona una opción del menú:</p>
+<div class="container mt-4">
 
-    <div style="display: flex; gap: 20px; margin-top: 20px;">
-        <a href="{{ route('ventas.index') }}" style="padding:20px; background:#007bff; color:white; border-radius:8px; text-decoration:none;">
-            🛒 Ventas
-        </a>
+    <h1 class="text-center mb-4">⚙️ Panel de Administración</h1>
+    <p class="text-center text-muted">Selecciona una opción del menú para gestionar tu sistema:</p>
 
-        <a href="{{ route('reportes.index') }}" style="padding:20px; background:#28a745; color:white; border-radius:8px; text-decoration:none;">
-            📊 Reportes
-        </a>
+    <div class="row mt-5">
+        <!-- Ventas -->
+        <div class="col-md-3">
+            <a href="{{ route('ventas.index') }}" class="text-decoration-none">
+                <div class="card text-center shadow-sm border-0 h-100">
+                    <div class="card-body bg-primary text-white rounded">
+                        <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                        <h4 class="card-title">Ventas</h4>
+                        <p class="card-text">Gestiona y registra ventas</p>
+                    </div>
+                </div>
+            </a>
+        </div>
 
-        <a href="#" style="padding:20px; background:#ffc107; color:black; border-radius:8px; text-decoration:none;">
-            👥 Clientes
-        </a>
+        <!-- Reportes -->
+        <div class="col-md-3">
+            <a href="{{ route('reportes.index') }}" class="text-decoration-none">
+                <div class="card text-center shadow-sm border-0 h-100">
+                    <div class="card-body bg-success text-white rounded">
+                        <i class="fas fa-chart-line fa-3x mb-3"></i>
+                        <h4 class="card-title">Reportes</h4>
+                        <p class="card-text">Visualiza estadísticas de ventas</p>
+                    </div>
+                </div>
+            </a>
+        </div>
 
-        <a href="#" style="padding:20px; background:#17a2b8; color:white; border-radius:8px; text-decoration:none;">
-            🍴 Productos
-        </a>
+        <!-- Clientes -->
+        <div class="col-md-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card text-center shadow-sm border-0 h-100">
+                    <div class="card-body bg-warning text-dark rounded">
+                        <i class="fas fa-users fa-3x mb-3"></i>
+                        <h4 class="card-title">Clientes</h4>
+                        <p class="card-text">Administra la base de clientes</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Productos -->
+        <div class="col-md-3">
+            <a href="#" class="text-decoration-none">
+                <div class="card text-center shadow-sm border-0 h-100">
+                    <div class="card-body bg-info text-white rounded">
+                        <i class="fas fa-box-open fa-3x mb-3"></i>
+                        <h4 class="card-title">Productos</h4>
+                        <p class="card-text">Controla el inventario y catálogo</p>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
+</div>
 @endsection
