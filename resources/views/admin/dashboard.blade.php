@@ -3,56 +3,91 @@
 @section('title', '⚙️ Panel de Administración')
 
 @section('content')
-<div class="container mt-5">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold">⚙️ Panel de Administración</h1>
-        <p class="text-muted">Bienvenido, selecciona una opción para continuar</p>
-    </div>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 bg-dark text-white min-vh-100 d-flex flex-column p-3">
+            <h3 class="mb-4 text-center">⚙️ Admin</h3>
+            <p class="text-center text-muted">Bienvenido al panel de administrador</p>
+            <hr class="border-light">
 
-    <div class="row g-4 justify-content-center">
-
-        <!-- Ventas -->
-        <div class="col-md-3">
-            <a href="{{ route('ventas.index') }}" class="card card-dashboard text-white bg-primary h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-shopping-cart fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Ventas</h4>
-                    <p class="mb-0">Gestión de ventas</p>
-                </div>
-            </a>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a href="{{ route('ventas.index') }}" class="nav-link text-white">
+                        <i class="fas fa-shopping-cart me-2"></i> Ventas
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="{{ route('reportes.index') }}" class="nav-link text-white">
+                        <i class="fas fa-chart-line me-2"></i> Reportes
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-users me-2"></i> Clientes
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="#" class="nav-link text-white">
+                        <i class="fas fa-box me-2"></i> Productos
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <!-- Reportes -->
-        <div class="col-md-3">
-            <a href="{{ route('reportes.index') }}" class="card card-dashboard text-white bg-success h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-line fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Reportes</h4>
-                    <p class="mb-0">Estadísticas y gráficas</p>
-                </div>
-            </a>
-        </div>
+        <!-- Contenido principal -->
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="text-center mb-5">
+                <h1 class="fw-bold">⚙️ Panel de Administración</h1>
+                <p class="text-muted">Selecciona una opción para continuar</p>
+            </div>
 
-        <!-- Clientes -->
-        <div class="col-md-3">
-            <a href="#" class="card card-dashboard text-dark bg-warning h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Clientes</h4>
-                    <p class="mb-0">Gestión de clientes</p>
-                </div>
-            </a>
-        </div>
+            <div class="row g-4 justify-content-center">
 
-        <!-- Productos -->
-        <div class="col-md-3">
-            <a href="#" class="card card-dashboard text-white bg-info h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-box fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Productos</h4>
-                    <p class="mb-0">Inventario y catálogo</p>
+                <!-- Ventas -->
+                <div class="col-md-3">
+                    <a href="{{ route('ventas.index') }}" class="card card-dashboard text-white bg-primary h-100 text-decoration-none">
+                        <div class="card-body text-center">
+                            <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                            <h4 class="fw-bold">Ventas</h4>
+                            <p class="mb-0">Gestión de ventas</p>
+                        </div>
+                    </a>
                 </div>
-            </a>
+
+                <!-- Reportes -->
+                <div class="col-md-3">
+                    <a href="{{ route('reportes.index') }}" class="card card-dashboard text-white bg-success h-100 text-decoration-none">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-line fa-3x mb-3"></i>
+                            <h4 class="fw-bold">Reportes</h4>
+                            <p class="mb-0">Estadísticas y gráficas</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Clientes -->
+                <div class="col-md-3">
+                    <a href="#" class="card card-dashboard text-dark bg-warning h-100 text-decoration-none">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <h4 class="fw-bold">Clientes</h4>
+                            <p class="mb-0">Gestión de clientes</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Productos -->
+                <div class="col-md-3">
+                    <a href="#" class="card card-dashboard text-white bg-info h-100 text-decoration-none">
+                        <div class="card-body text-center">
+                            <i class="fas fa-box fa-3x mb-3"></i>
+                            <h4 class="fw-bold">Productos</h4>
+                            <p class="mb-0">Inventario y catálogo</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -69,6 +104,10 @@
         transform: translateY(-8px);
         box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         filter: brightness(1.1);
+    }
+    .nav-link:hover {
+        background: rgba(255,255,255,0.1);
+        border-radius: 8px;
     }
 </style>
 @endsection
