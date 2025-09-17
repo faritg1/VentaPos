@@ -18,48 +18,61 @@ class ReporteController extends Controller
 
     // API JSON para gráficos
     public function data()
-    {
-        // Ventas por día (últimos 7 días)
-        $ventasPorDia = Venta::select(
-                DB::raw('DATE(created_at) as fecha'),
-                DB::raw('SUM(total) as total')
-            )
-            ->where('created_at', '>=', Carbon::now()->subDays(7))
-            ->groupBy('fecha')
-            ->orderBy('fecha', 'asc')
-            ->get();
+{
+    // Ventas por día
+    $ventasPorDia = Venta::select(
+            DB::raw('DATE(fecha) as fecha'),
+            DB::raw('SUM(total) as total')
+        )
+        ->groupBy('fecha')
+        ->orderBy('fecha', 'desc')
+        ->limit(7)
+        ->get();
 
-        // Ventas por mes (últimos 6 meses)
-        $ventasPorMes = Venta::select(
-                DB::raw('DATE_FORMAT(created_at, "%Y-%m") as mes'),
-                DB::raw('SUM(total) as total')
-            )
-            ->where('created_at', '>=', Carbon::now()->subMonths(6))
-            ->groupBy('mes')
-            ->orderBy('mes', 'asc')
-            ->get();
+    // Ventas por mes
+    $ventasPorMes = Venta::select(
+            DB::raw('DATE_FORMAT(fecha, "%Y-%m") as mes'),
+            DB::raw('SUM(total) as total')
+        )
+        ->groupBy('mes')
+        ->orderBy('mes', 'desc')
+        ->limit(6)
+        ->get();
 
-        // Productos más vendidos (los 5 primeros)
-        $ventasPorProducto = DetalleVenta::select(
-                'producto_id',
-                DB::raw('SUM(cantidad) as cantidad')
-            )
-            ->with('producto:id,nombre') // Traemos solo id y nombre
-            ->groupBy('producto_id')
-            ->orderByDesc('cantidad')
-            ->limit(5)
-            ->get()
-            ->map(function($item) {
-                return [
-                    'nombre' => $item->producto->nombre ?? 'Desconocido',
-                    'cantidad' => $item->cantidad,
-                ];
-            });
+    // Productos más vendidos
+    $ventasPorProducto = DetalleVenta::select(
+            'producto_id',
+            DB::raw('SUM(cantidad) as cantidad')
+        )
+        ->groupBy('producto_id')
+        ->with('producto')
+        ->orderByDesc('cantidad')
+        ->limit(5)
+        ->get();
 
-        return response()->json([
-            'porDia' => $ventasPorDia,
-            'porMes' => $ventasPorMes,
-            'porProducto' => $ventasPorProducto,
-        ]);
-    }
+    // === Totales para las cards ===
+    $ventasTotales = Venta::sum('total');
+    $clientes = DB::table('clientes')->count();
+    $productosVendidos = DetalleVenta::sum('cantidad');
+    $facturas = Venta::where('requiere_factura', true)->count();
+
+    // === Tipo de clientes ===
+    $mostrador = DB::table('clientes')->where('es_mostrador', true)->count();
+    $registrados = DB::table('clientes')->where('es_mostrador', false)->count();
+
+    return response()->json([
+        'porDia' => $ventasPorDia,
+        'porMes' => $ventasPorMes,
+        'porProducto' => $ventasPorProducto,
+        'ventasTotales' => $ventasTotales,
+        'clientes' => $clientes,
+        'productosVendidos' => $productosVendidos,
+        'facturas' => $facturas,
+        'tipoClientes' => [
+            'mostrador' => $mostrador,
+            'registrados' => $registrados
+        ]
+    ]);
+}
+
 }
