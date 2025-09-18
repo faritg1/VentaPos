@@ -19,27 +19,6 @@
         <p><strong>Total:</strong> ${{ number_format($venta->total, 0, ',', '.') }}</p>
 
         <hr>
-        <h5>Productos vendidos:</h5>
-        <table class="table table-bordered">
-            <thead class="table-light">
-                <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($venta->detalles as $detalle)
-                    <tr>
-                        <td>{{ $detalle->producto->nombre }}</td>
-                        <td>{{ $detalle->cantidad }}</td>
-                        <td>${{ number_format($detalle->precio, 0, ',', '.') }}</td>
-                        <td>${{ number_format($detalle->cantidad * $detalle->precio, 0, ',', '.') }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
     </div>
 </div>
 

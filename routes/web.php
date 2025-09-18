@@ -5,6 +5,8 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\PosController;
+use App\Http\Controllers\AdminController;
 
 // Panel Admin
 Route::prefix('admin')->group(function () {
@@ -17,14 +19,7 @@ Route::prefix('admin')->group(function () {
     // Ventas (solo index, show, edit, update, destroy)
     Route::resource('ventas', VentaController::class)->except(['create', 'store']);
   
-  // Productos fuera del admin
-Route::resource('producto', ProductoController::class);
 
-// POS
-Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
-Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
-Route::get('/pos/clientes/buscar/{numeroDocumento}', [PosController::class, 'searchClient'])->name('pos.client.search'); 
-Route::post('/pos/clientes', [PosController::class, 'storeClient'])->name('pos.client.store'); 
     
    // Productos
 Route::get('/productos', [ProductoController::class, 'index'])->name('admin.productos.index');
@@ -43,6 +38,15 @@ Route::put('/clientes/{cliente}', [ClienteController::class, 'update'])->name('a
 Route::delete('/clientes/{cliente}', [ClienteController::class, 'destroy'])->name('admin.clientes.destroy');
 
 });
+
+  // Productos fuera del admin
+Route::resource('producto', ProductoController::class);
+
+// POS
+Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
+Route::get('/pos/clientes/buscar/{numeroDocumento}', [PosController::class, 'searchClient'])->name('pos.client.search'); 
+Route::post('/pos/clientes', [PosController::class, 'storeClient'])->name('pos.client.store'); 
 
 // Página de inicio
 Route::get('/', function () {
