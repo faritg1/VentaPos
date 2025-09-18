@@ -6,6 +6,7 @@ use App\Models\Venta;
 use App\Models\DetalleVenta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ReporteController extends Controller
 {
@@ -22,63 +23,73 @@ class ReporteController extends Controller
      */
     public function data()
     {
-        // === Ventas por día (últimos 7 días) ===
-        $ventasPorDia = Venta::select(
-                DB::raw('DATE(fecha) as fecha'),
-                DB::raw('SUM(total) as total')
-            )
-            ->groupBy('fecha')
-            ->orderBy('fecha', 'desc')
-            ->limit(7)
-            ->get();
+        // Cacheamos los datos por 60 segundos (puedes ajustar el tiempo)
+        return Cache::remember('reportes.data', 60, function () {
 
-        // === Ventas por mes (últimos 6 meses) ===
-        $ventasPorMes = Venta::select(
-                DB::raw('DATE_FORMAT(fecha, "%Y-%m") as mes'),
-                DB::raw('SUM(total) as total')
-            )
-            ->groupBy('mes')
-            ->orderBy('mes', 'desc')
-            ->limit(6)
-            ->get();
+            // === Ventas por día (últimos 7 días) ===
+            $ventasPorDia = Venta::select(
+                    DB::raw('DATE(fecha) as fecha'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('fecha')
+                ->orderBy('fecha', 'desc')
+                ->limit(7)
+                ->get();
 
-        // === Productos más vendidos (Top 5) ===
-        $ventasPorProducto = DB::table('detalle_venta')
-            ->join('producto', 'detalle_venta.producto_id', '=', 'producto.id')
-            ->select(
-                'producto.nombre as label',
-                DB::raw('SUM(detalle_venta.cantidad) as value')
-            )
-            ->groupBy('producto.id', 'producto.nombre')
-            ->orderByDesc('value')
-            ->limit(5)
-            ->get();
+            // === Ventas por mes (últimos 6 meses) ===
+            $ventasPorMes = Venta::select(
+                    DB::raw('DATE_FORMAT(fecha, "%Y-%m") as mes'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('mes')
+                ->orderBy('mes', 'desc')
+                ->limit(6)
+                ->get();
 
-        // === Totales para las cards ===
-        $ventasTotales     = Venta::sum('total');
-        $clientes          = DB::table('cliente')->count();
-        $productosVendidos = DetalleVenta::sum('cantidad');
+            // === Productos más vendidos (Top 5) ===
+            $ventasPorProducto = DB::table('detalle_venta')
+                ->join('producto', 'detalle_venta.producto_id', '=', 'producto.id')
+                ->select(
+                    'producto.nombre as label',
+                    DB::raw('SUM(detalle_venta.cantidad) as value')
+                )
+                ->groupBy('producto.id', 'producto.nombre')
+                ->orderByDesc('value')
+                ->limit(5)
+                ->get();
 
-        // ⚠️ Ajuste: ya no existe "requiere_factura" en la tabla venta
-        $facturas          = Venta::where('tipo', 'factura')->count();
+            // === Totales (ventas y facturas) en UNA sola consulta ===
+            $totales = Venta::selectRaw('
+                    SUM(total) as ventasTotales,
+                    COUNT(CASE WHEN tipo = "factura" THEN 1 END) as facturas
+                ')
+                ->first();
 
-        // === Tipo de clientes (mostrador vs registrados) ===
-        $mostrador   = DB::table('cliente')->where('es_mostrador', true)->count();
-        $registrados = DB::table('cliente')->where('es_mostrador', false)->count();
+            // === Clientes (mostrador y registrados) en UNA sola consulta ===
+            $clientes = DB::table('cliente')->selectRaw('
+                    COUNT(*) as total,
+                    SUM(CASE WHEN es_mostrador = 1 THEN 1 ELSE 0 END) as mostrador,
+                    SUM(CASE WHEN es_mostrador = 0 THEN 1 ELSE 0 END) as registrados
+                ')
+                ->first();
 
-        // === Respuesta JSON ===
-        return response()->json([
-            'ventasTotales'     => $ventasTotales,
-            'clientes'          => $clientes,
-            'productosVendidos' => $productosVendidos,
-            'facturas'          => $facturas,
-            'porDia'            => $ventasPorDia,
-            'porMes'            => $ventasPorMes,
-            'porProducto'       => $ventasPorProducto,
-            'tipoClientes'      => [
-                'mostrador'   => $mostrador,
-                'registrados' => $registrados,
-            ],
-        ]);
+            // === Productos vendidos (cantidad total) ===
+            $productosVendidos = DetalleVenta::sum('cantidad');
+
+            // === Respuesta JSON optimizada ===
+            return [
+                'ventasTotales'     => $totales->ventasTotales,
+                'clientes'          => $clientes->total,
+                'productosVendidos' => $productosVendidos,
+                'facturas'          => $totales->facturas,
+                'porDia'            => $ventasPorDia,
+                'porMes'            => $ventasPorMes,
+                'porProducto'       => $ventasPorProducto,
+                'tipoClientes'      => [
+                    'mostrador'   => $clientes->mostrador,
+                    'registrados' => $clientes->registrados,
+                ],
+            ];
+        });
     }
 }
