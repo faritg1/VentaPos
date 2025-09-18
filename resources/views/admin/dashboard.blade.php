@@ -1,74 +1,53 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', '⚙️ Panel de Administración')
 
 @section('content')
-<div class="container mt-5">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold">⚙️ Panel de Administración</h1>
-        <p class="text-muted">Bienvenido, selecciona una opción para continuar</p>
+<div class="container-fluid mt-5">
+
+    <div class="text-center py-5">
+        <h1 class="fw-bold display-4 text-gradient mb-4">
+            <i class="fas fa-cogs fa-spin me-2"></i>
+            Bienvenido al Panel de Administración
+        </h1>
+        <p class="fs-5 text-muted">
+            Aquí podrás <span class="fw-semibold">gestionar productos, ventas y reportes</span> 
+            de manera rápida y sencilla.  
+            Usa el menú lateral para comenzar 🚀
+        </p>
     </div>
 
-    <div class="row g-4 justify-content-center">
-
-        <!-- Ventas -->
-        <div class="col-md-3">
-            <a href="{{ route('ventas.index') }}" class="card card-dashboard text-white bg-primary h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-shopping-cart fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Ventas</h4>
-                    <p class="mb-0">Gestión de ventas</p>
-                </div>
-            </a>
-        </div>
-
-        <!-- Reportes -->
-        <div class="col-md-3">
-            <a href="{{ route('reportes.index') }}" class="card card-dashboard text-white bg-success h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-line fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Reportes</h4>
-                    <p class="mb-0">Estadísticas y gráficas</p>
-                </div>
-            </a>
-        </div>
-
-        <!-- Clientes -->
-        <div class="col-md-3">
-            <a href="#" class="card card-dashboard text-dark bg-warning h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Clientes</h4>
-                    <p class="mb-0">Gestión de clientes</p>
-                </div>
-            </a>
-        </div>
-
-        <!-- Productos -->
-        <div class="col-md-3">
-            <a href="#" class="card card-dashboard text-white bg-info h-100 text-decoration-none">
-                <div class="card-body text-center">
-                    <i class="fas fa-box fa-3x mb-3"></i>
-                    <h4 class="fw-bold">Productos</h4>
-                    <p class="mb-0">Inventario y catálogo</p>
-                </div>
-            </a>
-        </div>
-    </div>
 </div>
 
 {{-- Estilos personalizados --}}
 <style>
-    .card-dashboard {
-        border: none;
-        border-radius: 15px;
-        transition: all 0.3s ease-in-out;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    /* Gradiente más moderno */
+    .text-gradient {
+        background: linear-gradient(90deg, #0d6efd, #20c997, #6f42c1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
-    .card-dashboard:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        filter: brightness(1.1);
+
+    h1 {
+        letter-spacing: 1px;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .container-fluid {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    /* Animación de entrada */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mejor contraste en el texto secundario */
+    p {
+        max-width: 700px;
+        margin: auto;
+        line-height: 1.6;
     }
 </style>
 @endsection

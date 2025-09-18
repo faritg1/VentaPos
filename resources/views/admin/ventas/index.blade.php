@@ -38,15 +38,6 @@
                             <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i>
                             </a>
-
-                            <!-- Eliminar -->
-                            <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta venta?')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
                         </td>
                     </tr>
                 @endforeach

@@ -9,20 +9,17 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('ventas.update', $venta->id) }}" method="POST">
+             <form action="{{ route('ventas.update', $venta->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
+                {{-- CAMBIO: Reemplazar el <select> por un <input> --}}
                 <div class="form-group">
-                    <label for="cliente_id">Cliente</label>
-                    <select name="cliente_id" id="cliente_id" class="form-control">
-                        <option value="">-- Seleccionar cliente --</option>
-                        @foreach($clientes as $cliente)
-                            <option value="{{ $cliente->id }}" {{ $venta->cliente_id == $cliente->id ? 'selected' : '' }}>
-                                {{ $cliente->nombre }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <label for="cliente_nombre">Cliente</label>
+                    <input type="text" id="cliente_nombre" class="form-control" 
+                           value="{{ $venta->cliente->nombre ?? 'Cliente no encontrado' }}" readonly>
+                    {{-- Se mantiene un campo oculto para no romper la lógica del update si fuera necesaria --}}
+                    <input type="hidden" name="cliente_id" value="{{ $venta->cliente_id }}">
                 </div>
 
                 <div class="form-group">

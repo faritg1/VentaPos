@@ -33,7 +33,7 @@ class VentaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'cliente_id' => 'nullable|exists:clientes,id',
+            'cliente_id' => 'nullable|exists:cliente,id',
             'metodo_pago_id' => 'required|exists:metodo_pago,id',
             'total' => 'required|numeric|min:0',
             'tipo' => 'required|string|max:50',
