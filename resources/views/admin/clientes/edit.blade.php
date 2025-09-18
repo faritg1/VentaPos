@@ -1,4 +1,10 @@
-@extends('layouts.app')
+@extends('adminlte::page')
+
+@section('title', 'Clientes')
+
+@section('content_header')
+
+@stop
 
 @section('content')
 <div class="card shadow-lg">

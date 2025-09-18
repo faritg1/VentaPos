@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Clientes')
+@section('title', 'Productos')
 
 @section('content_header')
 @stop
@@ -8,9 +8,9 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">👥 Lista de Clientes</h3>
-            <a href="{{ route('admin.clientes.create') }}" class="btn btn-primary btn-sm float-right">
-                ➕ Nuevo Cliente
+            <h3 class="card-title">📦 Gestión de Productos</h3>
+            <a href="{{ route('admin.productos.create') }}" class="btn btn-primary btn-sm float-right">
+                ➕ Nuevo Producto
             </a>
         </div>
 
@@ -19,26 +19,24 @@
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Tipo</th>
-                        <th>Documento</th>
                         <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Dirección</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($clientes as $cliente)
+                    @forelse($productos as $producto)
                         <tr>
-                            <td>{{ $cliente->id }}</td>
-                            <td>{{ $cliente->tipo_documento }}</td>
-                            <td>{{ $cliente->numero_documento }}</td>
-                            <td>{{ $cliente->nombre }}</td>
-                            <td>{{ $cliente->telefono }}</td>
-                            <td>{{ $cliente->direccion }}</td>
+                            <td>{{ $producto->id }}</td>
+                            <td>{{ $producto->nombre }}</td>
+                            <td>{{ $producto->descripcion }}</td>
+                            <td>${{ number_format($producto->precio, 0, ',', '.') }}</td>
+                            <td>{{ $producto->cantidad }}</td>
                             <td>
-                                <a href="{{ route('admin.clientes.edit', $cliente->id) }}" class="btn btn-warning btn-sm">✏️ Editar</a>
-                                <form action="{{ route('admin.clientes.destroy', $cliente->id) }}" method="POST" class="d-inline formulario-eliminar">
+                                <a href="{{ route('admin.productos.edit', $producto->id) }}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                                <form action="{{ route('admin.productos.destroy', $producto->id) }}" method="POST" class="d-inline formulario-eliminar">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">🗑️ Eliminar</button>
@@ -46,7 +44,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="7" class="text-center">No hay clientes registrados</td></tr>
+                        <tr><td colspan="6" class="text-center">No hay productos registrados</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -85,13 +83,13 @@
         </script>
     @endif
 
-    {{-- Confirmación con SweetAlert2 al eliminar --}}
+    {{-- Confirmación al eliminar --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const forms = document.querySelectorAll('.formulario-eliminar');
             forms.forEach(form => {
                 form.addEventListener('submit', function (e) {
-                    e.preventDefault(); // detener envío inmediato
+                    e.preventDefault();
                     Swal.fire({
                         title: '¿Estás seguro?',
                         text: "¡Esta acción no se puede deshacer!",
@@ -103,7 +101,7 @@
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            form.submit(); // ahora sí enviamos el formulario
+                            form.submit();
                         }
                     })
                 });
@@ -111,3 +109,5 @@
         });
     </script>
 @stop
+
+

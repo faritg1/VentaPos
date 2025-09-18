@@ -7,85 +7,64 @@ use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
-    /**
-     * Mostrar listado de productos
-     */
     public function index()
     {
         $productos = Producto::all();
-        return view('producto.index', compact('productos'));
+        return view('admin.productos.index', compact('productos'));
     }
 
-    /**
-     * Mostrar formulario para crear producto
-     */
     public function create()
     {
-        return view('producto.create');
+        return view('admin.productos.create');
     }
 
-    /**
-     * Guardar nuevo producto
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:100',
+            'descripcion' => 'nullable|string',
             'precio' => 'required|numeric|min:0',
-            'cantidad' => 'required|integer|min:0'
+            'cantidad' => 'required|integer|min:0',
         ]);
 
-        Producto::create($request->all());
+        Producto::create($request->only(['nombre', 'descripcion', 'precio', 'cantidad']));
 
-        return redirect()->route('producto.index')
-                         ->with('success', 'Producto creado correctamente');
+        return redirect()->route('admin.productos.index')
+                         ->with('success', '✅ Producto creado correctamente.');
     }
 
-    /**
-     * Mostrar un producto específico
-     */
-    public function show($id)
+    public function edit(Producto $producto)
     {
-        $producto = Producto::findOrFail($id);
-        return view('producto.show', compact('producto'));
+        return view('admin.productos.edit', compact('producto'));
     }
 
-    /**
-     * Mostrar formulario para editar producto
-     */
-    public function edit($id)
-    {
-        $producto = Producto::findOrFail($id);
-        return view('producto.edit', compact('producto'));
-    }
-
-    /**
-     * Actualizar producto
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, Producto $producto)
     {
         $request->validate([
-            'nombre' => 'required|string|max:255',
+            'nombre' => 'required|string|max:100',
+            'descripcion' => 'nullable|string',
             'precio' => 'required|numeric|min:0',
-            'cantidad' => 'required|integer|min:0'
+            'cantidad' => 'required|integer|min:0',
         ]);
 
-        $producto = Producto::findOrFail($id);
-        $producto->update($request->all());
+        $producto->update($request->only(['nombre', 'descripcion', 'precio', 'cantidad']));
 
-        return redirect()->route('producto.index')
-                         ->with('success', 'Producto actualizado correctamente');
+        return redirect()->route('admin.productos.index')
+                         ->with('success', '✏️ Producto actualizado correctamente.');
     }
 
-    /**
-     * Eliminar producto
-     */
-    public function destroy($id)
-    {
-        $producto = Producto::findOrFail($id);
-        $producto->delete();
-
-        return redirect()->route('producto.index')
-                         ->with('success', 'Producto eliminado correctamente');
+public function destroy(Producto $producto)
+{
+    if ($producto->detallesVenta()->exists()) {
+        return redirect()->route('admin.productos.index')
+            ->with('error', '❌ No se puede eliminar el productos con ventas.');
     }
+
+    $producto->delete();
+
+    return redirect()->route('admin.productos.index')
+        ->with('success', '🗑️ Producto eliminado correctamente.');
 }
+
+}
+
