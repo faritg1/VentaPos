@@ -2,20 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Cliente extends Model
 {
-    protected $table = 'cliente';
+    use HasFactory;
+
+    protected $table = 'cliente'; // 👈 nombre correcto de la tabla
+
     public $timestamps = false;
 
     protected $fillable = [
         'nombre',
-        'tipo_documento',
         'numero_documento',
+        'correo',
+        'telefono',
         'direccion',
         'ciudad',
-        'telefono',
-        'es_mostrador' // Asegúrate de que este campo también esté si lo usas
     ];
 }
