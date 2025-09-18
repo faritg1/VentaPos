@@ -9,18 +9,18 @@ class Producto extends Model
 {
     use HasFactory;
 
-    // 👇 Aquí obligamos a Laravel a usar la tabla "producto"
     protected $table = 'producto';
 
+    /**
+     * Indica al modelo que no use las columnas created_at y updated_at.
+     * @var bool
+     */
+    public $timestamps = false;
+
     protected $fillable = [
-        'codigo',
         'nombre',
         'descripcion',
         'cantidad',
         'precio',
     ];
-
-    protected $primaryKey = 'codigo'; // si tu llave primaria no es 'id'
-    public $incrementing = true;
-    protected $keyType = 'int';
 }

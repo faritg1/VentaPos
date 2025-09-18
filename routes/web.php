@@ -30,6 +30,8 @@ Route::prefix('admin')->group(function () {
 Route::resource('producto', ProductoController::class);
 Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
 Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
+Route::get('/pos/clientes/buscar/{numeroDocumento}', [PosController::class, 'searchClient'])->name('pos.client.search'); 
+Route::post('/pos/clientes', [PosController::class, 'storeClient'])->name('pos.client.store'); 
 
 Route::get('/', function () {
     return view('welcome');
