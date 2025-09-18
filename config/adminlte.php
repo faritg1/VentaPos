@@ -63,12 +63,13 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
-    'logo_img_xl' => null,
-    'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+   'logo' => '',
+'logo_img' => '',
+'logo_img_class' => '',
+'logo_img_xl' => null,
+'logo_img_xl_class' => '',
+'logo_img_alt' => '',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -191,7 +192,7 @@ return [
     */
 
     'classes_body' => '',
-    'classes_brand' => '',
+'classes_brand' => 'd-none',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
