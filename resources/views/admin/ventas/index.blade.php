@@ -1,30 +1,22 @@
 @extends('adminlte::page')
 
-@section('title', '🧾 Ventas')
+@section('title', 'Ventas')
 
 @section('content_header')
-    <h1 class="fw-bold text-primary">
-        <i class="fas fa-shopping-cart me-2"></i> Ventas
-    </h1>
+    <h1>Listado de Ventas</h1>
 @stop
 
 @section('content')
-<div class="card shadow">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-list me-2"></i> Listado de Ventas</span>
-        <a href="{{ route('ventas.create') }}" class="btn btn-light btn-sm">
-            <i class="fas fa-plus-circle"></i> Nueva Venta
-        </a>
-    </div>
+<div class="card">
     <div class="card-body">
-        <table id="tablaVentas" class="table table-bordered table-striped table-hover">
-            <thead class="table-primary">
+        <table class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Cliente</th>
-                    <th>Fecha</th>
                     <th>Total</th>
-                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th>Método de Pago</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -33,26 +25,25 @@
                     <tr>
                         <td>{{ $venta->id }}</td>
                         <td>{{ $venta->cliente->nombre ?? 'Mostrador' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($venta->fecha)->format('d/m/Y H:i') }}</td>
+                        <td>${{ number_format($venta->total, 0, ',', '.') }}</td>
+                        <td>{{ $venta->fecha }}</td>
+                        <td>{{ $venta->metodoPago->nombre }}</td>
                         <td>
-                            {{ number_format($venta->total, 0, ',', '.') }} COP
-                        </td>
-                        <td>
-                            <span class="badge bg-{{ $venta->tipo == 'factura' ? 'success' : 'secondary' }}">
-                                {{ ucfirst($venta->tipo) }}
-                            </span>
-                        </td>
-                        <td>
+                            <!-- Ver factura -->
                             <a href="{{ route('ventas.show', $venta->id) }}" class="btn btn-info btn-sm">
                                 <i class="fas fa-eye"></i>
                             </a>
+
+                            <!-- Editar -->
                             <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" class="d-inline">
+
+                            <!-- Eliminar -->
+                            <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que deseas eliminar esta venta?')">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar esta venta?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -63,24 +54,4 @@
         </table>
     </div>
 </div>
-@stop
-
-@section('js')
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#tablaVentas').DataTable({
-            responsive: true,
-            autoWidth: false,
-            language: {
-                url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-            }
-        });
-    });
-</script>
-@stop
-
-@section('css')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 @stop

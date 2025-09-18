@@ -6,6 +6,7 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ClienteController;
 
+// Panel Admin
 Route::prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
@@ -13,11 +14,19 @@ Route::prefix('admin')->group(function () {
     Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
     Route::get('/reportes/data', [ReporteController::class, 'data'])->name('reportes.data');
 
-    // Ventas
-    Route::get('/ventas', [VentaController::class, 'index'])->name('ventas.index');
-    Route::get('/ventas/{id}', [VentaController::class, 'show'])->name('ventas.show');
+    // Ventas (solo index, show, edit, update, destroy)
+    Route::resource('ventas', VentaController::class)->except(['create', 'store']);
+  
+  // Productos fuera del admin
+Route::resource('producto', ProductoController::class);
 
-// Productos
+// POS
+Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
+Route::get('/pos/clientes/buscar/{numeroDocumento}', [PosController::class, 'searchClient'])->name('pos.client.search'); 
+Route::post('/pos/clientes', [PosController::class, 'storeClient'])->name('pos.client.store'); 
+    
+   // Productos
 Route::get('/productos', [ProductoController::class, 'index'])->name('admin.productos.index');
 Route::get('/productos/create', [ProductoController::class, 'create'])->name('admin.productos.create');
 Route::post('/productos', [ProductoController::class, 'store'])->name('admin.productos.store');
@@ -35,18 +44,7 @@ Route::delete('/clientes/{cliente}', [ClienteController::class, 'destroy'])->nam
 
 });
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
+// Página de inicio
 Route::get('/', function () {
     return view('welcome');
 });
