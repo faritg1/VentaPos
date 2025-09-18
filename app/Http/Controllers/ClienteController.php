@@ -63,10 +63,20 @@ public function update(Request $request, Cliente $cliente)
 }
 
     // Eliminar cliente
-    public function destroy(Cliente $cliente)
-    {
-        $cliente->delete();
-        return redirect()->route('admin.clientes.index')->with('success', 'Cliente eliminado correctamente.');
+public function destroy(Cliente $cliente)
+{
+    // Verificar si el cliente tiene ventas asociadas
+    if ($cliente->ventas()->exists()) {
+        return redirect()->route('admin.clientes.index')
+            ->with('error', '❌ No se puede eliminar el cliente porque tiene ventas asociadas.');
     }
+
+    // Si no tiene ventas, se elimina
+    $cliente->delete();
+
+    return redirect()->route('admin.clientes.index')
+        ->with('success', '🗑️ Cliente eliminado correctamente.');
+}
+
 }
 

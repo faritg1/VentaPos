@@ -29,4 +29,11 @@ class Producto extends Model
 
 
         public $timestamps = false;
+        
+
+        public function detallesVenta()
+{
+    return $this->hasMany(DetalleVenta::class, 'producto_id');
+}
+
 }

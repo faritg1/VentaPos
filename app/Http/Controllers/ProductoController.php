@@ -53,18 +53,18 @@ class ProductoController extends Controller
                          ->with('success', '✏️ Producto actualizado correctamente.');
     }
 
-    public function destroy(Producto $producto)
-    {
-        // Solo funciona si definiste relación detalleVentas() en el modelo
-        if (method_exists($producto, 'detalleVentas') && $producto->detalleVentas()->count() > 0) {
-            return redirect()->route('admin.productos.index')
-                             ->with('error', '❌ No se puede eliminar un producto con ventas registradas.');
-        }
-
-        $producto->delete();
-
+public function destroy(Producto $producto)
+{
+    if ($producto->detallesVenta()->exists()) {
         return redirect()->route('admin.productos.index')
-                         ->with('success', '🗑️ Producto eliminado correctamente.');
+            ->with('error', '❌ No se puede eliminar el productos con ventas.');
     }
+
+    $producto->delete();
+
+    return redirect()->route('admin.productos.index')
+        ->with('success', '🗑️ Producto eliminado correctamente.');
+}
+
 }
 
