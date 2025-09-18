@@ -7,6 +7,8 @@ use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\AdminController;
 
+Route::resource('ventas', VentaController::class);
+
 Route::prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
