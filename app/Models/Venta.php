@@ -9,9 +9,7 @@ class Venta extends Model
 {
     use HasFactory;
 
-   protected $table = 'venta'; // Nombre exacto de tu tabla
-
-    // Desactivamos los timestamps porque tu tabla no tiene created_at ni updated_at
+    protected $table = 'venta';
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,7 +21,6 @@ class Venta extends Model
         'fecha',
     ];
 
-    // Relaciones
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
