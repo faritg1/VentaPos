@@ -23,7 +23,6 @@ class ReporteController extends Controller
      */
     public function data()
     {
-        // Cacheamos los datos por 60 segundos (puedes ajustar el tiempo)
         return Cache::remember('reportes.data', 60, function () {
 
             // === Ventas por día (últimos 7 días) ===
@@ -58,14 +57,14 @@ class ReporteController extends Controller
                 ->limit(5)
                 ->get();
 
-            // === Totales (ventas y facturas) en UNA sola consulta ===
+            // === Totales (ventas y facturas) ===
             $totales = Venta::selectRaw('
                     SUM(total) as ventasTotales,
                     COUNT(CASE WHEN tipo = "factura" THEN 1 END) as facturas
                 ')
                 ->first();
 
-            // === Clientes (mostrador y registrados) en UNA sola consulta ===
+            // === Clientes (mostrador y registrados) ===
             $clientes = DB::table('cliente')->selectRaw('
                     COUNT(*) as total,
                     SUM(CASE WHEN es_mostrador = 1 THEN 1 ELSE 0 END) as mostrador,
@@ -73,21 +72,20 @@ class ReporteController extends Controller
                 ')
                 ->first();
 
-            // === Productos vendidos (cantidad total) ===
+            // === Productos vendidos ===
             $productosVendidos = DetalleVenta::sum('cantidad');
 
-            // === Respuesta JSON optimizada ===
             return [
-                'ventasTotales'     => $totales->ventasTotales,
-                'clientes'          => $clientes->total,
-                'productosVendidos' => $productosVendidos,
-                'facturas'          => $totales->facturas,
+                'ventasTotales'     => $totales->ventasTotales ?? 0,
+                'clientes'          => $clientes->total ?? 0,
+                'productosVendidos' => $productosVendidos ?? 0,
+                'facturas'          => $totales->facturas ?? 0,
                 'porDia'            => $ventasPorDia,
                 'porMes'            => $ventasPorMes,
                 'porProducto'       => $ventasPorProducto,
                 'tipoClientes'      => [
-                    'mostrador'   => $clientes->mostrador,
-                    'registrados' => $clientes->registrados,
+                    'mostrador'   => $clientes->mostrador ?? 0,
+                    'registrados' => $clientes->registrados ?? 0,
                 ],
             ];
         });
