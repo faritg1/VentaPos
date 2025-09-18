@@ -419,7 +419,7 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
@@ -492,3 +492,4 @@ return [
 
     'livewire' => false,
 ];
+

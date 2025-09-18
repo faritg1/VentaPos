@@ -21,21 +21,22 @@ class ClienteController extends Controller
     }
 
     // Guardar nuevo cliente
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:150',
-            'tipo_documento' => 'nullable|string|max:20',
-            'numero_documento' => 'nullable|string|max:50|unique:clientes,numero_documento',
-            'direccion' => 'nullable|string|max:150',
-            'ciudad' => 'nullable|string|max:100',
-            'telefono' => 'nullable|string|max:50',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'tipo_documento' => 'required|string|max:20',
+        'numero_documento' => 'required|string|max:50|unique:cliente,numero_documento',
+        'nombre' => 'required|string|max:150',
+        'direccion' => 'nullable|string|max:150',
+        'ciudad' => 'nullable|string|max:100',
+        'telefono' => 'nullable|string|max:50',
+    ]);
 
-        Cliente::create($request->all());
+    Cliente::create($request->all());
 
-        return redirect()->route('admin.clientes.index')->with('success', 'Cliente creado correctamente.');
-    }
+    return redirect()->route('admin.clientes.index')
+        ->with('success', '✅ Cliente registrado correctamente.');
+}
 
     // Mostrar formulario de edición
     public function edit(Cliente $cliente)
@@ -44,21 +45,22 @@ class ClienteController extends Controller
     }
 
     // Actualizar cliente
-    public function update(Request $request, Cliente $cliente)
-    {
-        $request->validate([
-            'nombre' => 'required|string|max:150',
-            'tipo_documento' => 'nullable|string|max:20',
-            'numero_documento' => 'nullable|string|max:50|unique:clientes,numero_documento,' . $cliente->id,
-            'direccion' => 'nullable|string|max:150',
-            'ciudad' => 'nullable|string|max:100',
-            'telefono' => 'nullable|string|max:50',
-        ]);
+public function update(Request $request, Cliente $cliente)
+{
+    $request->validate([
+        'tipo_documento' => 'required|string|max:20',
+        'numero_documento' => 'required|string|max:50|unique:cliente,numero_documento,' . $cliente->id,
+        'nombre' => 'required|string|max:150',
+        'direccion' => 'nullable|string|max:150',
+        'ciudad' => 'nullable|string|max:100',
+        'telefono' => 'nullable|string|max:50',
+        'es_mostrador' => 'boolean'
+    ]);
 
-        $cliente->update($request->all());
+    $cliente->update($request->all());
 
-        return redirect()->route('admin.clientes.index')->with('success', 'Cliente actualizado correctamente.');
-    }
+    return redirect()->route('admin.clientes.index')->with('success', '✏️ Cliente actualizado correctamente.');
+}
 
     // Eliminar cliente
     public function destroy(Cliente $cliente)
@@ -67,3 +69,4 @@ class ClienteController extends Controller
         return redirect()->route('admin.clientes.index')->with('success', 'Cliente eliminado correctamente.');
     }
 }
+
